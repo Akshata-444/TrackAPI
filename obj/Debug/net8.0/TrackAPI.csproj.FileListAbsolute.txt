@@ -143,3 +143,4 @@ C:\Users\AKSPAWAR\Desktop\aaab\Updates\TrackingAPI\TrackAPI\bin\Debug\net8.0\Mic
 C:\Users\AKSPAWAR\Desktop\aaab\Updates\TrackingAPI\TrackAPI\bin\Debug\net8.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\AKSPAWAR\Desktop\aaab\Updates\TrackingAPI\TrackAPI\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
 C:\Users\AKSPAWAR\Desktop\aaab\Updates\TrackingAPI\TrackAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.Annotations.dll
+C:\Users\AKSPAWAR\Desktop\aaab\Updates\TrackingAPI\TrackAPI\obj\Debug\net8.0\TrackAPI.sourcelink.json

@@ -246,5 +246,26 @@ namespace TrackAPI.Repository
         {
             return await context.Batches.ToListAsync();
         }
+
+         public async Task<string> DeleteBatch(int batchId)
+        {
+            try
+            {
+                var batchToDelete = await context.Batches.FindAsync(batchId);
+                if (batchToDelete == null)
+                {
+                    return "Batch not found.";
+                }
+
+                context.Batches.Remove(batchToDelete);
+                await context.SaveChangesAsync();
+
+                return "Batch deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                return $"Error occurred while deleting batch: {ex.Message}.";
+            }
+        }
 }
 }

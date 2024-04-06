@@ -13,5 +13,7 @@ namespace TrackAPI.Interfaces
 
         Task<IEnumerable<Batch>> GetAllBatches();
 
+        Task<string> DeleteBatch(int batchId);
+
     }
 }

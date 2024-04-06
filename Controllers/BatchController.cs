@@ -132,5 +132,19 @@ public async Task<IActionResult> AddUsersFromExcel( IFormFile file)
             return Ok(batches);
         }
 
+         [HttpDelete("{batchId}")]
+        public async Task<IActionResult> DeleteBatch(int batchId)
+        {
+            try
+            {
+                var result = await _batchService.DeleteBatch(batchId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }

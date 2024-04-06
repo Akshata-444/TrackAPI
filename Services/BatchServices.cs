@@ -64,5 +64,17 @@ namespace TrackAPI.Services
         {
             return await Batch.GetAllBatches();
         }
+
+         public async Task<string> DeleteBatch(int batchId)
+        {
+            try
+            {
+                return await Batch.DeleteBatch(batchId);
+            }
+            catch (Exception ex)
+            {
+                return $"Error occurred in service: {ex.Message}.";
+            }
+        }
     }
 }
