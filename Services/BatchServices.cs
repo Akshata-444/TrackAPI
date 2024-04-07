@@ -76,5 +76,11 @@ namespace TrackAPI.Services
                 return $"Error occurred in service: {ex.Message}.";
             }
         }
+
+        public async Task<byte[]> GetExcelDataForBatch(int batchId)
+{
+    return await Batch.GetExcelDataForBatch(batchId);
+}
+
     }
 }

@@ -12,15 +12,15 @@ using TrackAPI.Data;
 namespace TrackAPI.Migrations
 {
     [DbContext(typeof(TrackDbContext))]
-    [Migration("20240403105510_Initial")]
-    partial class Initial
+    [Migration("20240407131038_Migrate")]
+    partial class Migrate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

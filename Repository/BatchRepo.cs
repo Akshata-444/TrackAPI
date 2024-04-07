@@ -267,5 +267,15 @@ namespace TrackAPI.Repository
                 return $"Error occurred while deleting batch: {ex.Message}.";
             }
         }
+
+        public async Task<byte[]> GetExcelDataForBatch(int batchId)
+{
+    var batch = await context.Batches.FindAsync(batchId);
+    if (batch == null || batch.Employee_info_Excel == null)
+        return null;
+
+    return batch.Employee_info_Excel;
+}
+
 }
 }
