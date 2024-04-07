@@ -15,7 +15,9 @@ namespace TrackAPI.Interfaces
 
         Task<string> DeleteBatch(int batchId);
 
-        Task<byte[]> GetExcelDataForBatch(int batchId);
+        //Task<byte[]> GetExcelDataForBatch(int batchId);
+
+Task<string> GetExcelDataForBatch(int batchId);
 
 
     }

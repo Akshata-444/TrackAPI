@@ -11,10 +11,12 @@ using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace TrackAPI.Repository
 {
     public class BatchRepo : IBatch
+
     {
         private readonly TrackDbContext context;
 
@@ -268,14 +270,42 @@ namespace TrackAPI.Repository
             }
         }
 
-        public async Task<byte[]> GetExcelDataForBatch(int batchId)
+        public async Task<string> GetExcelDataForBatch(int batchId)
 {
     var batch = await context.Batches.FindAsync(batchId);
     if (batch == null || batch.Employee_info_Excel == null)
         return null;
 
-    return batch.Employee_info_Excel;
+    using (var stream = new MemoryStream(batch.Employee_info_Excel))
+    {
+        using (var package = new ExcelPackage(stream))
+        {
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Assuming data is in the first sheet
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            int rowCount = worksheet.Dimension.Rows;
+
+            // Create a StringBuilder to store the data
+            StringBuilder excelData = new StringBuilder();
+
+            // Iterate through rows and columns to read Excel data
+            for (int row = 1; row <= rowCount; row++)
+            {
+                for (int col = 1; col <= worksheet.Dimension.Columns; col++)
+                {
+                    // Append cell value to StringBuilder
+                    excelData.Append(worksheet.Cells[row, col].Value?.ToString() ?? string.Empty);
+                    excelData.Append("\t"); // Add tab as a delimiter between columns
+                }
+                excelData.AppendLine(); // Move to the next row
+            }
+
+            return excelData.ToString();
+        }
+    }
 }
+
+
+
 
 }
 }

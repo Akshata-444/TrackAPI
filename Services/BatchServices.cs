@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TrackAPI.DTO;
@@ -77,10 +78,11 @@ namespace TrackAPI.Services
             }
         }
 
-        public async Task<byte[]> GetExcelDataForBatch(int batchId)
+       public async Task<string> GetExcelDataForBatch(int batchId)
 {
     return await Batch.GetExcelDataForBatch(batchId);
 }
+
 
     }
 }

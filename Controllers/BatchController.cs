@@ -146,7 +146,7 @@ public async Task<IActionResult> AddUsersFromExcel( IFormFile file)
             }
         }
 
-        [HttpGet("{batchId}/excel-data")]
+      [HttpGet("{batchId}/excel-data")]
 public async Task<IActionResult> GetExcelDataForBatch(int batchId)
 {
     try
@@ -155,15 +155,14 @@ public async Task<IActionResult> GetExcelDataForBatch(int batchId)
         if (excelData == null)
             return NotFound("Excel data not found for the specified batch.");
 
-        // You may return the Excel data as a file or any other format based on your requirements
-        // For simplicity, let's return it as a byte array in this example
-        return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "batch_data.xlsx");
+        return Ok(excelData);
     }
     catch (Exception ex)
     {
         return StatusCode(500, $"Internal server error: {ex.Message}");
     }
 }
+
 
 
     }
