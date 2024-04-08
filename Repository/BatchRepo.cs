@@ -155,7 +155,7 @@ namespace TrackAPI.Repository
                 await context.SaveChangesAsync();
 
                 // Add users from the Excel file to the User table
-                await AddUsersFromExcelfile(fileData);
+                await AddUsersFromExcelfile(fileData,newBatch);
 
                 return "Batch and employees added successfully.";
             }
@@ -165,7 +165,7 @@ namespace TrackAPI.Repository
             }
         }
 
-        private async Task AddUsersFromExcelfile(byte[] fileData)
+        private async Task AddUsersFromExcelfile(byte[] fileData,Batch newBatch)
         {
              using (var memoryStream = new MemoryStream(fileData))
              {
@@ -202,7 +202,10 @@ namespace TrackAPI.Repository
                     users.Add(user);
                 }
 
-         
+              foreach(var user in users)
+         {
+         user.Batches = new List<Batch>(){newBatch};
+         }
                 // Add users to the User table
                // context.Users.AddRange(users);
                context.Users.AddRange(users.Select(u => new User
@@ -226,7 +229,8 @@ namespace TrackAPI.Repository
                     PersonalEmailId=u.PersonalEmailId,
                     //EarlierMentorName=u.EarlierMentorName,
                     //FinalMentorName=u.FinalMentorName,
-                    Attendance_Count=0
+                    Attendance_Count=0,
+                    Batches=u.Batches
                  }));
                 
                
