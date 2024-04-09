@@ -183,7 +183,7 @@ namespace TrackAPI.Repository
                     User user = new User
                     {
                         // Populate user properties from Excel columns
-                        Name = worksheet.Cells[row, 1].Value?.ToString(),
+                        Name = worksheet.Cells[row, 5].Value?.ToString(),
                         Domain=worksheet.Cells[row, 14].Value?.ToString(),
                     JobTitle=worksheet.Cells[row, 10].Value?.ToString(),
                     Location=worksheet.Cells[row, 11].Value?.ToString(),

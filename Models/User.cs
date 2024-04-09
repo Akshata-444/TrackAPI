@@ -51,5 +51,7 @@ public int UserId { get; set; }//PK
    public double Attendance_Count{get;set;}=0;//Initailzed to zero by defult
 
         public List<DailyUpdate>? DailyUpdates { get; set; }=null;
+       // public object UserTasks { get; internal set; }
+
     }
     }

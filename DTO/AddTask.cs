@@ -8,15 +8,17 @@ namespace TrackAPI.DTO
 {
     public class AddTask
     {
+
+    public int UserTaskID { get; set; }
     public string TaskName { get; set; }
     public string Description { get; set; }
-    public long Priority { get; set; }
+    public priority Priority { get; set; }
     public DateTime DeadLine { get; set; }
-    public string Status { get; set; }
+    public int Status { get; set; }
     public int AssignedBy { get; set; }
-    public int AssignedTo { get; set; }
-    public long Comments { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public List<int> AssignedTo { get; set; }
+    public int BatchId { get; set; }
+    public string Comments { get; set; }
 
 
     }

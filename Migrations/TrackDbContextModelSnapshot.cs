@@ -126,16 +126,14 @@ namespace TrackAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedbackId"));
 
-                    b.Property<string>("Comments")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Comments")
+                        .HasColumnType("int");
 
                     b.Property<int>("TaskId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TotalAverageRating")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TotalAverageRating")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -158,9 +156,8 @@ namespace TrackAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RatingId"));
 
-                    b.Property<string>("Comments")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Comments")
+                        .HasColumnType("int");
 
                     b.Property<int>("FeedbackId")
                         .HasColumnType("int");
@@ -171,10 +168,10 @@ namespace TrackAPI.Migrations
                     b.Property<int>("RatedTo")
                         .HasColumnType("int");
 
-                    b.Property<long>("RatingValue")
-                        .HasColumnType("bigint");
+                    b.Property<int>("RatingValue")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SubTaskId")
+                    b.Property<int>("TaskSubmissionId")
                         .HasColumnType("int");
 
                     b.HasKey("RatingId");
@@ -185,9 +182,9 @@ namespace TrackAPI.Migrations
 
                     b.HasIndex("RatedTo");
 
-                    b.HasIndex("SubTaskId");
+                    b.HasIndex("TaskSubmissionId");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("TrackAPI.Models.SubTask", b =>
@@ -205,20 +202,11 @@ namespace TrackAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("FileUploadDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte[]>("FileUploadSubmission")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("FileUploadTaskPdf")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TaskId")
                         .HasColumnType("int");
@@ -232,6 +220,37 @@ namespace TrackAPI.Migrations
                     b.HasIndex("TaskId");
 
                     b.ToTable("SubTask");
+                });
+
+            modelBuilder.Entity("TrackAPI.Models.TaskSubmission+TaskSubmissions", b =>
+                {
+                    b.Property<int>("TaskSubmissionsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TaskSubmissionsId"));
+
+                    b.Property<byte[]>("FileUploadSubmission")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTime?>("SubTaskSubmitteddOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("submittedFileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("subtaskid")
+                        .HasColumnType("int");
+
+                    b.HasKey("TaskSubmissionsId");
+
+                    b.ToTable("TaskSubmissions");
                 });
 
             modelBuilder.Entity("TrackAPI.Models.User", b =>
@@ -305,7 +324,12 @@ namespace TrackAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserTaskID")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
+
+                    b.HasIndex("UserTaskID");
 
                     b.ToTable("Users");
                 });
@@ -321,16 +345,18 @@ namespace TrackAPI.Migrations
                     b.Property<int>("AssignedBy")
                         .HasColumnType("int");
 
-                    b.Property<int>("AssignedTo")
-                        .HasColumnType("int");
+                    b.Property<string>("AssignedTo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("BatchId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Comments")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DeadLine")
@@ -340,12 +366,11 @@ namespace TrackAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Priority")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("TaskName")
                         .IsRequired()
@@ -354,8 +379,6 @@ namespace TrackAPI.Migrations
                     b.HasKey("UserTaskID");
 
                     b.HasIndex("AssignedBy");
-
-                    b.HasIndex("AssignedTo");
 
                     b.HasIndex("BatchId");
 
@@ -393,7 +416,7 @@ namespace TrackAPI.Migrations
                     b.HasOne("TrackAPI.Models.User", "User")
                         .WithMany("DailyUpdates")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -438,9 +461,9 @@ namespace TrackAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TrackAPI.Models.SubTask", "SubTask")
+                    b.HasOne("TrackAPI.Models.TaskSubmission+TaskSubmissions", "TaskSubmissions")
                         .WithMany()
-                        .HasForeignKey("SubTaskId")
+                        .HasForeignKey("TaskSubmissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -450,7 +473,7 @@ namespace TrackAPI.Migrations
 
                     b.Navigation("RatedToUser");
 
-                    b.Navigation("SubTask");
+                    b.Navigation("TaskSubmissions");
                 });
 
             modelBuilder.Entity("TrackAPI.Models.SubTask", b =>
@@ -464,6 +487,13 @@ namespace TrackAPI.Migrations
                     b.Navigation("UserTask");
                 });
 
+            modelBuilder.Entity("TrackAPI.Models.User", b =>
+                {
+                    b.HasOne("TrackAPI.Models.UserTask", null)
+                        .WithMany("AssignedToUser")
+                        .HasForeignKey("UserTaskID");
+                });
+
             modelBuilder.Entity("TrackAPI.Models.UserTask", b =>
                 {
                     b.HasOne("TrackAPI.Models.User", "AssignedByUser")
@@ -472,23 +502,13 @@ namespace TrackAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TrackAPI.Models.User", "AssignedToUser")
-                        .WithMany()
-                        .HasForeignKey("AssignedTo")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TrackAPI.Models.Batch", "Batches")
+                    b.HasOne("TrackAPI.Models.Batch", null)
                         .WithMany("UserTask")
                         .HasForeignKey("BatchId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AssignedByUser");
-
-                    b.Navigation("AssignedToUser");
-
-                    b.Navigation("Batches");
                 });
 
             modelBuilder.Entity("TrackAPI.Models.Batch", b =>
@@ -508,8 +528,9 @@ namespace TrackAPI.Migrations
 
             modelBuilder.Entity("TrackAPI.Models.UserTask", b =>
                 {
-                    b.Navigation("FeedBack")
-                        .IsRequired();
+                    b.Navigation("AssignedToUser");
+
+                    b.Navigation("FeedBack");
 
                     b.Navigation("SubTasks");
                 });

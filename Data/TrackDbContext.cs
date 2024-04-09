@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TrackAPI.Models;
+using static TrackAPI.Models.TaskSubmission;
 
 namespace TrackAPI.Data
 {
@@ -19,7 +20,14 @@ namespace TrackAPI.Data
     public DbSet<UserTask> Tasks { get; set; }
     public DbSet<SubTask> SubTask { get; set; }
     public DbSet<FeedBack> FeedBacks { get; set; }
-                public DbSet<DailyUpdate> DailyUpdates { get; set; }
+    public DbSet<DailyUpdate> DailyUpdates { get; set; }
+
+    //changed
+    public DbSet<TaskSubmissions> TaskSubmissions{get;set;}
+
+     public DbSet<Rating>Ratings {get;set;}
+
+
 
 
 
@@ -59,7 +67,7 @@ namespace TrackAPI.Data
         .HasForeignKey(t => t.AssignedBy)
         .OnDelete(DeleteBehavior.Restrict); // Specify the OnDelete behavior
 
-    modelBuilder.Entity<UserTask>()
+    /*modelBuilder.Entity<UserTask>()
         .HasOne(t => t.AssignedToUser)
         .WithMany()
         .HasForeignKey(t => t.AssignedTo)
@@ -70,7 +78,7 @@ namespace TrackAPI.Data
         .WithMany(b => b.UserTask)
         .HasForeignKey(t => t.BatchId)
         .OnDelete(DeleteBehavior.Restrict); // Specify the OnDelete behavior
-
+*/
     // Define relationship between Task and SubTask
     modelBuilder.Entity<SubTask>()
         .HasOne(st => st.UserTask)
@@ -79,7 +87,7 @@ namespace TrackAPI.Data
         .OnDelete(DeleteBehavior.Cascade); // Specify the OnDelete behavior if needed
 
     // Define relationship between Rating and User for RatedBy
-    modelBuilder.Entity<Rating>()
+   /* modelBuilder.Entity<Rating>()
         .HasOne(r => r.RatedByUser)
         .WithMany()
         .HasForeignKey(r => r.RatedBy)
@@ -99,7 +107,7 @@ namespace TrackAPI.Data
         .HasForeignKey(r => r.SubTaskId)
         .OnDelete(DeleteBehavior.Cascade); // Specify the OnDelete behavior if needed
 // Define relationship between Feedback and Task
-    modelBuilder.Entity<FeedBack>()
+  */  modelBuilder.Entity<FeedBack>()
         .HasOne(f => f.UserTask) // Specify the navigation property for Task in Feedback
         .WithOne(t => t.FeedBack) // Specify the navigation property for Feedback in Task
         .HasForeignKey<FeedBack>(f => f.TaskId) // Specify the foreign key property in Feedback
@@ -123,12 +131,43 @@ namespace TrackAPI.Data
     modelBuilder.Entity<DailyUpdate>()
         .HasOne(d => d.User)                    // DailyUpdate has one User
         .WithMany(u => u.DailyUpdates)          // User can have many DailyUpdates
-        .HasForeignKey(d => d.UserId); 
+        .HasForeignKey(d => d.UserId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+        // Define the relationship between Rating and RatedByUser (User)
+modelBuilder.Entity<Rating>()
+    .HasOne(r => r.RatedByUser)
+    .WithMany()
+    .HasForeignKey(r => r.RatedBy)
+    .OnDelete(DeleteBehavior.Restrict);
+
+    // Define the relationship between Rating and RatedToUser (User)
+modelBuilder.Entity<Rating>()
+    .HasOne(r => r.RatedToUser)
+    .WithMany()
+    .HasForeignKey(r => r.RatedTo)
+    .OnDelete(DeleteBehavior.Restrict);
+
+    // Define the relationship between Rating and TaskSubmissions
+modelBuilder.Entity<Rating>()
+    .HasOne(r => r.TaskSubmissions)
+    .WithMany() // Assuming TaskSubmissions can have multiple ratings
+    .HasForeignKey(r => r.TaskSubmissionId)
+    .OnDelete(DeleteBehavior.Cascade); // Specify the OnDelete behavior if needed
+
+    // Define the relationship between Rating and FeedBack
+modelBuilder.Entity<Rating>()
+    .HasOne(r => r.FeedBack)
+    .WithMany(f => f.Ratings)
+    .HasForeignKey(r => r.FeedbackId)
+    .OnDelete(DeleteBehavior.Restrict);
+    base.OnModelCreating(modelBuilder);
 
 
 
 
-        base.OnModelCreating(modelBuilder);
+
+    
 
 
 

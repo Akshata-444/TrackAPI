@@ -1,62 +1,57 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using TrackAPI.Models;
-using TrackAPI.DTO;
 using TrackAPI.Data;
-using Microsoft.EntityFrameworkCore;
 using TrackAPI.Interfaces;
+using TrackAPI.Models;
+using Microsoft.EntityFrameworkCore;
+using TrackAPI.DTO;
+using static TrackAPI.Models.TaskSubmission;
 
 namespace TrackAPI.Repository
 {
     public class AddTaskRepo : ITask
     {
-        
-            TrackDbContext  context;
-         static IConfiguration ? _config;
+        private readonly TrackDbContext _context;
 
-       
-        public AddTaskRepo(DbContextOptions<TrackDbContext> options,IConfiguration configuration){
-            context=  new TrackDbContext(options);
-             _config=configuration;
-        }
-        
-        
-
-        public async Task<string> AddTask(AddTask task)
+        public AddTaskRepo(TrackDbContext context)
         {
-            try
+            _context = context;
+        }
+
+         public async Task<int> AssignTaskToBatch(int batchId, AddTask task)
+        {
+            // Get employees in the batch
+            var batch = await _context.Batches
+                .Include(b => b.Employees)
+                .SingleOrDefaultAsync(b => b.BatchId == batchId);
+
+            if (batch == null)
             {
-                // Map DTO to entity
-                UserTask taskEntity = new UserTask();
-               // var taskEntity = new Task();
-                
-                    taskEntity.TaskName = task.TaskName;
-                    //TaskName = task.TaskName;
-                    taskEntity.Description = task.Description;
-                    taskEntity.Priority = task.Priority;
-                    taskEntity.DeadLine = task.DeadLine;
-                    taskEntity.Status = task.Status;
-                    taskEntity.AssignedBy = task.AssignedBy;
-                    taskEntity.AssignedTo = task.AssignedTo;
-                    taskEntity.Comments = task.Comments;
-                    taskEntity.CreatedAt = task.CreatedAt;
-                
-
-                // Add entity to DbContext and save changes
-               context.Tasks.Add(taskEntity);
-
-               await context.SaveChangesAsync();
-               return "Task sucessfully added";
-                
-                return null;
-        }
-            
-            catch(Exception e){
-                throw;
+                throw new InvalidOperationException("Batch not found");
             }
+
+            // Create the task
+            var userTask = new UserTask
+            {
+                // ... (Map properties from task DTO)
+                TaskName = task.TaskName,
+                Description = task.Description,
+                Priority = task.Priority,
+                DeadLine = task.DeadLine,
+                Status = (TrackAPI.Models.TaskSubmission.status)task.Status,
+                AssignedBy = task.AssignedBy,
+                AssignedTo = batch.Employees.Select(e => e.UserId).ToList(),
+                // ... (Other properties)
+                BatchId = batchId,
+                Comments = task.Comments
+            };
+
+            _context.Tasks.Add(userTask);
+            await _context.SaveChangesAsync();
+
+            return userTask.UserTaskID;
         }
-        }
-        
-}
+}}
+  

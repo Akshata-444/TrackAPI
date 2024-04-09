@@ -4,28 +4,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using TrackAPI.DTO;
 using TrackAPI.Interfaces;
+using TrackAPI.Models;
 
 namespace TrackAPI.Services
 {
     public class AddTaskServices
     {
-        public ITask Task;
-        public AddTaskServices(ITask Task) {
-        this.Task = Task;
+        private readonly ITask _taskRepository;
 
-    }
-
-     public async Task<string> AddTask(AddTask task)
+        public AddTaskServices(ITask taskRepository)
         {
-            try{
-                return await Task.AddTask(task);
+            _taskRepository = taskRepository;
+        }
 
-
-            }
-            catch(Exception ex){
-                throw;
-            }
-            }
-
-}
+      
+        public async Task<int> AssignTaskToBatch(int batchId, AddTask task)
+        {
+            return await _taskRepository.AssignTaskToBatch(batchId, task);
+        }
+    }
 }
