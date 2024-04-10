@@ -89,6 +89,9 @@ builder.Services.AddScoped<BatchServices,BatchServices>();
 builder.Services.AddScoped<ITask,AddTaskRepo>();
 builder.Services.AddScoped<AddTaskServices,AddTaskServices>();
 
+builder.Services.AddScoped<ITaskSub,TaskSubRepository>();
+builder.Services.AddScoped<TaskSubServices,TaskSubServices>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

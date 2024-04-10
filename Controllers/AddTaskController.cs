@@ -50,6 +50,48 @@ public async Task<IActionResult> AssignTaskToBatch(int batchId, [FromBody] AddTa
             return Ok(result);
         }
 
+         [HttpGet("batches/{batchId}/tasks")]
+        public async Task<IActionResult> GetAllTasks(int batchId)
+        {
+            try
+            {
+                List<UserTask> tasks = await _taskServices.GetAllTasks(batchId);
+                return Ok(tasks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+        [HttpGet("tasks/{taskId}/subtasks")]
+        public async Task<IActionResult> GetAllSubtasks(int taskId)
+        {
+            try
+            {
+                List<SubTask> subtasks = await _taskServices.GetAllSubtasks(taskId);
+                return Ok(subtasks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+         [HttpGet("tasks/search")]
+        public async Task<IActionResult> SearchTasksByTaskName(string taskName)
+        {
+            try
+            {
+                List<UserTask> tasks = await _taskServices.SearchTasksByTaskName(taskName);
+                return Ok(tasks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
 
     }
 }

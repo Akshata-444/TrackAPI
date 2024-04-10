@@ -86,12 +86,27 @@ namespace TrackAPI.Repository
             return "Subtask created successfully";
         }
 
+        public async Task<List<UserTask>> GetAllTasks(int batchId)
+        {
+            // Retrieve all tasks for a batch
+            return await _context.Tasks.Where(t => t.BatchId == batchId).ToListAsync();
+        }
+
         /*public async Task<List<SubTask>> GetAllSubtasks(int taskId)
         {
             return await _context.SubTask.Where(s => s.TaskId == taskId).ToListAsync();
         }*/
 
-        
+        public async Task<List<SubTask>> GetAllSubtasks(int taskId)
+        {
+            // Retrieve all subtasks for a task
+            return await _context.SubTask.Where(s => s.TaskId == taskId).ToListAsync();
+        }
+
+         public async Task<List<UserTask>> SearchTasksByTaskName(string taskName)
+        {
+            return await _context.Tasks.Where(t => t.TaskName.Contains(taskName)).ToListAsync();
+        }
 
        
 

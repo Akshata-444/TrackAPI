@@ -13,6 +13,14 @@ namespace TrackAPI.Interfaces
 
        //Task<int> CreateSubTask(int taskId, AddSubTask subTask);
       Task<string> AddNewSubtask(AddSubTask subtask);
+
+      Task<List<UserTask>> GetAllTasks(int batchId);
+
+      Task<List<SubTask>> GetAllSubtasks(int taskId);
+
+      Task<List<UserTask>> SearchTasksByTaskName(string taskName);
+
+
        
     }
 }

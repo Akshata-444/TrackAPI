@@ -32,5 +32,21 @@ namespace TrackAPI.Services
         {
             return await _taskRepository.AddNewSubtask(subtask);
         }
+
+         public async Task<List<UserTask>> GetAllTasks(int batchId)
+        {
+            return await _taskRepository.GetAllTasks(batchId);
+        }
+
+                public async Task<List<SubTask>> GetAllSubtasks(int taskId)
+        {
+            return await _taskRepository.GetAllSubtasks(taskId);
+        }
+
+         public async Task<List<UserTask>> SearchTasksByTaskName(string taskName)
+        {
+            return await _taskRepository.SearchTasksByTaskName(taskName);
+        }
+
     }
 }
