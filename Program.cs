@@ -92,6 +92,9 @@ builder.Services.AddScoped<AddTaskServices,AddTaskServices>();
 builder.Services.AddScoped<ITaskSub,TaskSubRepository>();
 builder.Services.AddScoped<TaskSubServices,TaskSubServices>();
 
+builder.Services.AddScoped<IRating,RatingRepo>();
+builder.Services.AddScoped<RatingServices,RatingServices>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
