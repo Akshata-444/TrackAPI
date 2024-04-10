@@ -10,5 +10,9 @@ namespace TrackAPI.Interfaces
     public interface ITask
     {
        Task<int> AssignTaskToBatch(int batchId, AddTask task);
+
+       //Task<int> CreateSubTask(int taskId, AddSubTask subTask);
+      Task<string> AddNewSubtask(AddSubTask subtask);
+       
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TrackAPI.DTO;
 using static TrackAPI.Models.TaskSubmission;
 
+
 namespace TrackAPI.Repository
 {
     public class AddTaskRepo : ITask
@@ -53,5 +54,46 @@ namespace TrackAPI.Repository
 
             return userTask.UserTaskID;
         }
-}}
-  
+
+        public async Task<string> AddNewSubtask(AddSubTask subtask)
+        {
+            var existingTask = await _context.Tasks.FindAsync(subtask.TaskId);
+            if (existingTask == null)
+                return "Task not found";
+
+            var newSubtask = new SubTask
+            {
+                Title = subtask.Title,
+                Description = subtask.Description,
+                TaskId = subtask.TaskId,
+                CreationDate = DateTime.Now,
+            FileName = subtask.FileUploadTaskFileUpload.FileName // Assuming FileName is provided in DTO
+                        };
+
+                        // Handle file upload logic
+                        if (subtask.FileUploadTaskFileUpload != null && subtask.FileUploadTaskFileUpload.Length > 0)
+                        {
+                            using (var ms = new MemoryStream())
+                            {
+                                subtask.FileUploadTaskFileUpload.CopyTo(ms);
+                                newSubtask.FileUploadTaskPdf = ms.ToArray();
+                            }
+                        }
+
+            _context.SubTask.Add(newSubtask);
+            await _context.SaveChangesAsync();
+
+            return "Subtask created successfully";
+        }
+
+        /*public async Task<List<SubTask>> GetAllSubtasks(int taskId)
+        {
+            return await _context.SubTask.Where(s => s.TaskId == taskId).ToListAsync();
+        }*/
+
+        
+
+       
+
+
+    }}

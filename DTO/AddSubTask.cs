@@ -15,9 +15,9 @@ namespace TrackAPI.DTO
 
     public IFormFile? FileUploadTaskFileUpload{get;set;}
 
-    public byte[]? FileUploadTaskPdf { get; set; }
+   // public byte[]? FileUploadTaskPdf { get; set; }
 
-    public string FileName{get;set;}
+    //public string FileName{get;set;}
 
     }
 }

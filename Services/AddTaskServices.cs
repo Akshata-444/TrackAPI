@@ -22,5 +22,15 @@ namespace TrackAPI.Services
         {
             return await _taskRepository.AssignTaskToBatch(batchId, task);
         }
+
+        /*public async Task<int> CreateSubTask(int taskId, AddSubTask subTask)
+        {
+            return await _taskRepository.CreateSubTask(taskId, subTask);
+        }*/
+
+        public async Task<string> AddNewSubtask(AddSubTask subtask)
+        {
+            return await _taskRepository.AddNewSubtask(subtask);
+        }
     }
 }

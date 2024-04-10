@@ -43,6 +43,12 @@ public async Task<IActionResult> AssignTaskToBatch(int batchId, [FromBody] AddTa
         return StatusCode(500, "Internal server error: " + ex.Message);
     }
 }
+ [HttpPost("add")]
+        public async Task<IActionResult> AddNewSubtask([FromForm] AddSubTask subtask)
+        {
+            var result = await _taskServices.AddNewSubtask(subtask);
+            return Ok(result);
+        }
 
 
     }
