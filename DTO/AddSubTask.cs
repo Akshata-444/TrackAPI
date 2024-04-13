@@ -12,7 +12,7 @@ namespace TrackAPI.DTO
 
     public string Title { get; set; }
     public string Description { get; set; }
-    public int Status { get; set; }
+    //public int Status { get; set; }
     public int TaskId { get; set; }//Fk to Task
 
     public IFormFile? FileUploadTaskFileUpload{get;set;}

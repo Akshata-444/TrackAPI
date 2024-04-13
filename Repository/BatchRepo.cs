@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using Microsoft.Data.SqlClient;
 
 namespace TrackAPI.Repository
 {
@@ -253,26 +254,44 @@ namespace TrackAPI.Repository
             return await context.Batches.ToListAsync();
         }
 
-         public async Task<string> DeleteBatch(int batchId)
+       public async Task<string> DeleteBatch(int batchId)
+{
+    try
+    {
+        var batchToDelete = await context.Batches.FindAsync(batchId);
+        if (batchToDelete == null)
         {
-            try
-            {
-                var batchToDelete = await context.Batches.FindAsync(batchId);
-                if (batchToDelete == null)
-                {
-                    return "Batch not found.";
-                }
-
-                context.Batches.Remove(batchToDelete);
-                await context.SaveChangesAsync();
-
-                return "Batch deleted successfully.";
-            }
-            catch (Exception ex)
-            {
-                return $"Error occurred while deleting batch: {ex.Message}.";
-            }
+            return "Batch not found.";
         }
+
+        context.Batches.Remove(batchToDelete);
+        await context.SaveChangesAsync();
+
+        return "Batch deleted successfully.";
+    }
+    catch (DbUpdateException ex)
+    {
+        // Log the exception
+        Console.WriteLine($"Error occurred while deleting batch: {ex.Message}");
+
+        // Check if it's due to a constraint violation or duplicate key
+        if (ex.InnerException is SqlException sqlEx && (sqlEx.Number == 547 || sqlEx.Number == 2601))
+        {
+            return "Error deleting batch: There are dependent entities or duplicate key values.";
+        }
+        
+        return $"Error occurred while deleting batch: {ex.Message}.";
+    }
+    catch (Exception ex)
+    {
+        // Log the exception
+        Console.WriteLine($"Error occurred while deleting batch: {ex.Message}");
+        return $"Error occurred while deleting batch: {ex.Message}.";
+    }
+}
+
+
+    
 
         public async Task<string> GetExcelDataForBatch(int batchId)
 {

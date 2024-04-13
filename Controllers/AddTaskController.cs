@@ -46,11 +46,27 @@ public async Task<IActionResult> AssignTaskToBatch(int batchId, [FromBody] AddTa
  [HttpPost("add")]
         public async Task<IActionResult> AddNewSubtask([FromForm] AddSubTask subtask)
         {
+            /*var result = await _taskServices.AddNewSubtask(subtask);
+        
+        if (result == "Task not found")
+        {
+            return NotFound(new { error = "Task not found" });
+        }
+        else if (result == "Subtask created successfully")
+        {
+            return Ok(new { message = "Subtask created successfully" });
+        }
+        else
+        {
+            // Handle other possible outcomes
+            return BadRequest(new { error = "An error occurred" });
+        }*/
+    
             var result = await _taskServices.AddNewSubtask(subtask);
             return Ok(result);
         }
 
-         [HttpGet("batches/{batchId}/tasks")]
+         [HttpGet("GetAlltasks/{batchId}/tasks")]
         public async Task<IActionResult> GetAllTasks(int batchId)
         {
             try

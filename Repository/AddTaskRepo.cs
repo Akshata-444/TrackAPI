@@ -33,6 +33,9 @@ namespace TrackAPI.Repository
                 throw new InvalidOperationException("Batch not found");
             }
 
+
+
+var Mentorbatch= _context.Batches.FirstOrDefault(m=>m.BatchId== batchId);
             // Create the task
             var userTask = new UserTask
             {
@@ -42,7 +45,7 @@ namespace TrackAPI.Repository
                 Priority = task.Priority,
                 DeadLine = task.DeadLine,
                 Status = (TrackAPI.Models.TaskSubmission.status)task.Status,
-                AssignedBy = task.AssignedBy,
+                AssignedBy = Mentorbatch.MentorId,
                 AssignedTo = batch.Employees.Select(e => e.UserId).ToList(),
                 // ... (Other properties)
                 BatchId = batchId,
@@ -57,7 +60,7 @@ namespace TrackAPI.Repository
 
         public async Task<string> AddNewSubtask(AddSubTask subtask)
         {
-            var existingTask = await _context.Tasks.FindAsync(subtask.TaskId);
+           /* var existingTask = await _context.Tasks.FindAsync(subtask.TaskId);
             if (existingTask == null)
                 return "Task not found";
 
@@ -83,8 +86,44 @@ namespace TrackAPI.Repository
             _context.SubTask.Add(newSubtask);
             await _context.SaveChangesAsync();
 
-            return "Subtask created successfully";
+            return "Subtask created successfully";*/
+            try
+            {
+                var existingTask = await _context.Tasks.FindAsync(subtask.TaskId);
+                if (existingTask == null)
+                    return "Task not found";
+
+                var newSubtask = new SubTask
+                {
+                    Title = subtask.Title,
+                    Description = subtask.Description,
+                    TaskId = subtask.TaskId,
+                    CreationDate = DateTime.Now
+                };
+
+                // Handle file upload logic
+                if (subtask.FileUploadTaskFileUpload != null && subtask.FileUploadTaskFileUpload.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        subtask.FileUploadTaskFileUpload.CopyTo(ms);
+                        newSubtask.FileUploadTaskPdf = ms.ToArray();
+                    }
+                }
+
+                _context.SubTask.Add(newSubtask);
+                await _context.SaveChangesAsync();
+
+                return "Subtask created successfully";
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                return $"An error occurred: {ex.Message}";
+            }
         }
+    
+        
 
         public async Task<List<UserTask>> GetAllTasks(int batchId)
         {
