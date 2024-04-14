@@ -15,7 +15,7 @@ namespace TrackAPI.DTO
     public priority Priority { get; set; }
     public DateTime DeadLine { get; set; }
     public int Status { get; set; }
-  //  public int AssignedBy { get; set; }
+    public int AssignedBy { get; set; }
    // public List<int> AssignedTo { get; set; }
    // public int BatchId { get; set; }
     public string Comments { get; set; }

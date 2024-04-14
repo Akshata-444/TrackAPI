@@ -146,8 +146,14 @@ var Mentorbatch= _context.Batches.FirstOrDefault(m=>m.BatchId== batchId);
         {
             return await _context.Tasks.Where(t => t.TaskName.Contains(taskName)).ToListAsync();
         }
+        
 
-       
-
+        public async Task<List<UserTask>> GetTasksByUserIdAsync(int userId)
+        {
+            return await _context.Tasks
+                .Include(task => task.AssignedByUser)
+                .Where(task => task.AssignedTo.Contains(userId))
+                .ToListAsync();
+        }
 
     }}

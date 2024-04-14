@@ -20,7 +20,18 @@ ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddDbContext<TrackDbContext>(options=>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();
-builder.Services.AddCors(p => p.AddDefaultPolicy(policy => policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod()));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
+//builder.Services.AddCors(p => p.AddDefaultPolicy(policy => policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod()));
  builder.Services.Configure<IISServerOptions>(options =>
     {
         options.MaxRequestBodySize = int.MaxValue; // Set maximum request body size to the maximum value
@@ -95,6 +106,8 @@ builder.Services.AddScoped<TaskSubServices,TaskSubServices>();
 builder.Services.AddScoped<IRating,RatingRepo>();
 builder.Services.AddScoped<RatingServices,RatingServices>();
 
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -114,7 +127,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
-app.UseCors();
+app.UseCors("AllowOrigin");
 
 app.MapControllers();
 

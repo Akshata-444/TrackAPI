@@ -19,7 +19,8 @@ namespace TrackAPI.Interfaces
       Task<List<SubTask>> GetAllSubtasks(int taskId);
 
       Task<List<UserTask>> SearchTasksByTaskName(string taskName);
-
+      
+      Task<List<UserTask>> GetTasksByUserIdAsync(int userId);
 
        
     }
