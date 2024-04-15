@@ -8,6 +8,7 @@ using TrackAPI.Services;
 using TrackAPI.DTO;
 using TrackAPI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration; 
 
 namespace TrackAPI.Controllers
 {
@@ -23,9 +24,28 @@ namespace TrackAPI.Controllers
 
     }
 
+ [HttpGet("GetuserByUserId/{userId}")]
+        public async Task<ActionResult<User>> GettUser(int userId)
+        {
+            try
+            {
+                var user = await UserService.GettUser(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+    
+
 //change role to admin , admin will add mentor 
 [HttpPost]
-[Authorize(Roles ="Mentor")]
+//[Authorize(Roles ="Mentor,Admin")]
 [Route("AddEmployee")]
 public async Task<ActionResult>  AddUser([FromBody]ADDUSER user)//Try [FromBody]
 {

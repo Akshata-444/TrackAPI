@@ -109,7 +109,7 @@ public async Task<IActionResult> AssignTaskToBatch(int batchId, [FromBody] AddTa
         }
 
        [HttpGet("{userId}")]
-        public async Task<ActionResult<List<AddTask>>> GetTasksByUserId(int userId)
+        public async Task<ActionResult<List<UserTask>>> GetTasksByUserId(int userId)
         {
             var tasks = await _taskServices.GetTasksByUserIdAsync(userId);
             if (tasks == null)

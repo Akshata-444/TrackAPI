@@ -11,6 +11,6 @@ namespace TrackAPI.Interfaces
     {
         Task<string> AddUser(ADDUSER user);
 
-        
+         Task<User> GettUser(int userId);
     }
 }

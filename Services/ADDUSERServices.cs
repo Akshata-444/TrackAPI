@@ -17,6 +17,11 @@ namespace TrackAPI.Services
 
     }
 
+    public async Task<User> GettUser(int userId)
+        {
+            return await User.GettUser(userId);
+        }
+
     public async Task<string> AddUser(ADDUSER user)
         {
             try{

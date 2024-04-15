@@ -7,6 +7,7 @@ using TrackAPI.Interfaces;
 using TrackAPI.Models;
 using TrackAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration; 
 
 namespace TrackAPI.Repository
 {
@@ -21,6 +22,10 @@ namespace TrackAPI.Repository
             _config=configuration;
             }
 
+        public async Task<User> GettUser(int userId)
+        {
+            return await context.Users.FindAsync(userId);
+        }
 
             public async Task<string> AddUser(ADDUSER user)
         {
@@ -61,4 +66,6 @@ return "User sucessfully added";
             }
         }
     }
+
+     
 }

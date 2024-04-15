@@ -48,17 +48,10 @@ namespace TrackAPI.Services
             return await _taskRepository.SearchTasksByTaskName(taskName);
         }
 
-        public async Task<List<AddTask>> GetTasksByUserIdAsync(int userId)
+        public async Task<List<UserTask>> GetTasksByUserIdAsync(int userId)
         {
             var tasks = await _taskRepository.GetTasksByUserIdAsync(userId);
-            return tasks.Select(task => new AddTask
-            {
-                TaskName = task.TaskName,
-                Description = task.Description,
-                Priority = task.Priority,
-                DeadLine = task.DeadLine,
-               
-            }).ToList();
+            return tasks;
         }
     }
 

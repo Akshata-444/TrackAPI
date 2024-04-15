@@ -34,7 +34,8 @@ namespace TrackAPI.Repository
             var claims = new List<Claim>{
             
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                new Claim("userId", user.UserId.ToString()) 
             };
             // Create a security key based on the configured JWT key
              var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -69,6 +70,7 @@ namespace TrackAPI.Repository
                     var responseJson = new
                 {
                     token = Token,
+                    userId = existing_user.UserId
                     //userProfile = existing_user
                 };
                 // Serialize the JSON response to a string and return it
