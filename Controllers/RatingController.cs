@@ -12,8 +12,7 @@ namespace TrackAPI.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class RatingController : ControllerBase
-    {
-        private readonly RatingServices _ratingService;
+    { private readonly RatingServices _ratingService;
 
         public RatingController(RatingServices ratingService)
         {
@@ -21,7 +20,7 @@ namespace TrackAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Rating>> AddRating(AddRating ratingDto)
+        public async Task<IActionResult> AddRating(AddRating ratingDto)
         {
             if (!ModelState.IsValid)
             {
@@ -29,8 +28,26 @@ namespace TrackAPI.Controllers
             }
 
             var result = await _ratingService.AddRating(ratingDto);
+
             return Ok(result);
         }
 
+         [HttpGet("{userId}")]
+        public async Task<IActionResult> GetRatingsByUserId(int userId)
+        {
+            var ratings = await _ratingService.GetRatingsByUserId(userId);
+            return Ok(ratings);
+        }
+
+         [HttpGet("subtask/{submissionId}")]
+        public async Task<IActionResult> GetSubtaskIdBySubmissionId(int submissionId)
+        {
+            var subtaskId = await _ratingService.GetSubtaskIdBySubmissionId(submissionId);
+            if (subtaskId == null)
+            {
+                return NotFound();
+            }
+            return Ok(subtaskId);
+        }
     }
 }

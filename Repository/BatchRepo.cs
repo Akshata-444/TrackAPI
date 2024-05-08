@@ -26,7 +26,7 @@ namespace TrackAPI.Repository
             this.context = context;
         }
 
-        public async Task<string> AddUsersFromExcel(byte[] excelData)
+public async Task<string> AddUsersFromExcel(byte[] excelData)
 {
      try
      {
@@ -93,8 +93,6 @@ namespace TrackAPI.Repository
                     Grade=u.Grade,
                     Total_Average_RatingStatus=0,
                     PersonalEmailId=u.PersonalEmailId,
-                    //EarlierMentorName=u.EarlierMentorName,
-                    //FinalMentorName=u.FinalMentorName,
                     Attendance_Count=0
                  }));
                  await context.SaveChangesAsync();
@@ -184,19 +182,19 @@ namespace TrackAPI.Repository
                     User user = new User
                     {
                         // Populate user properties from Excel columns
-                        Name = worksheet.Cells[row, 5].Value?.ToString(),
-                        Domain=worksheet.Cells[row, 14].Value?.ToString(),
-                    JobTitle=worksheet.Cells[row, 10].Value?.ToString(),
-                    Location=worksheet.Cells[row, 11].Value?.ToString(),
+                      Name = worksheet.Cells[row, 5].Value?.ToString(),
+                      Domain=worksheet.Cells[row, 14].Value?.ToString(),
+                     JobTitle=worksheet.Cells[row, 10].Value?.ToString(),
+                     Location=worksheet.Cells[row, 11].Value?.ToString(),
  
-                    Phone=worksheet.Cells[row, 22].Value?.ToString(),
+                     Phone=worksheet.Cells[row, 22].Value?.ToString(),
                     //IsCr=Convert.ToBoolean(worksheet.Cells[row, 9].Value?.ToString()),
                     Gender=worksheet.Cells[row, 6].Value?.ToString(),
                     Doj=Convert.ToDateTime(worksheet.Cells[row, 7].Value?.ToString()),
                     CapgeminiEmailId=worksheet.Cells[row, 23].Value?.ToString(),
  
                     Grade=worksheet.Cells[row,9].Value?.ToString(),
-                     PersonalEmailId=worksheet.Cells[row, 21].Value?.ToString(),
+                    PersonalEmailId=worksheet.Cells[row, 21].Value?.ToString(),
                         // Add other properties as needed
                     };
 
@@ -254,41 +252,24 @@ namespace TrackAPI.Repository
             return await context.Batches.ToListAsync();
         }
 
-       public async Task<string> DeleteBatch(int batchId)
-{
-    try
-    {
-        var batchToDelete = await context.Batches.FindAsync(batchId);
-        if (batchToDelete == null)
+       public async Task<bool> DeleteBatchAsync(int batchId)
         {
-            return "Batch not found.";
+            try
+            {
+                var batch = await context.Batches.FindAsync(batchId);
+                if (batch == null)
+                    return false;
+
+                context.Batches.Remove(batch);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return false;
+            }
         }
-
-        context.Batches.Remove(batchToDelete);
-        await context.SaveChangesAsync();
-
-        return "Batch deleted successfully.";
-    }
-    catch (DbUpdateException ex)
-    {
-        // Log the exception
-        Console.WriteLine($"Error occurred while deleting batch: {ex.Message}");
-
-        // Check if it's due to a constraint violation or duplicate key
-        if (ex.InnerException is SqlException sqlEx && (sqlEx.Number == 547 || sqlEx.Number == 2601))
-        {
-            return "Error deleting batch: There are dependent entities or duplicate key values.";
-        }
-        
-        return $"Error occurred while deleting batch: {ex.Message}.";
-    }
-    catch (Exception ex)
-    {
-        // Log the exception
-        Console.WriteLine($"Error occurred while deleting batch: {ex.Message}");
-        return $"Error occurred while deleting batch: {ex.Message}.";
-    }
-}
 
 
     
@@ -329,6 +310,28 @@ namespace TrackAPI.Repository
 
 
 
+ public async Task<bool> UpdateBatchAsync(int batchId, Batch updatedBatch)
+        {
+            try
+            {
+                var batch = await context.Batches.FindAsync(batchId);
+                if (batch == null)
+                    return false;
 
+                batch.BatchName = updatedBatch.BatchName;
+                batch.Domain = updatedBatch.Domain;
+                batch.Description = updatedBatch.Description;
+
+                context.Entry(batch).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return false;
+            }
+        }
+    }
 }
-}
+

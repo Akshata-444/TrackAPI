@@ -9,7 +9,10 @@ namespace TrackAPI.Interfaces
 {
     public interface IRating
     {
-        Task<Rating> AddRating(AddRating ratingDto);
+        Task<Rating> AddRatingAsync(AddRating rating); 
 
+        Task<IEnumerable<Rating>> GetRatingsByUserIdAsync(int userId); 
+    
+       Task<int?> GetSubtaskIdBySubmissionIdAsync(int submissionId);
     }
 }

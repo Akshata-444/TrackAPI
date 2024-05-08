@@ -132,19 +132,15 @@ public async Task<IActionResult> AddUsersFromExcel( IFormFile file)
             return Ok(batches);
         }
 
-         [HttpDelete("{batchId}")]
+      [HttpDelete("{batchId}")]
         public async Task<IActionResult> DeleteBatch(int batchId)
         {
-            try
-            {
-                var result = await _batchService.DeleteBatch(batchId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+            var result = await _batchService.DeleteBatchAsync(batchId);
+            if (!result)
+                return NoContent();
+            else
+            return NotFound();
+        } 
 
       [HttpGet("{batchId}/excel-data")]
 public async Task<IActionResult> GetExcelDataForBatch(int batchId)
@@ -163,7 +159,15 @@ public async Task<IActionResult> GetExcelDataForBatch(int batchId)
     }
 }
 
-
+[HttpPut("{batchId}")]
+        public async Task<IActionResult> UpdateBatch(int batchId, [FromBody] Batch updatedBatch)
+        {
+            var result = await _batchService.UpdateBatchAsync(batchId, updatedBatch);
+            if (result)
+                return NoContent(); // Status 204: Batch updated successfully
+            else
+                return NotFound(); // Status 404: Batch not found or could not be updated
+        }
 
     }
 }

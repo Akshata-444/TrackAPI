@@ -22,6 +22,18 @@ namespace TrackAPI.Interfaces
       
       Task<List<UserTask>> GetTasksByUserIdAsync(int userId);
 
-       
+      Task<byte[]> DownloadSubtaskFile(int subtaskId);
+
+         Task<bool> DeleteTask(int taskId);
+
+          Task<bool> DeleteSubTaskAsync(int subTaskId);
+
+           Task<IEnumerable<UserTask>> GetTasksWithSubtasksByUserIdAsync(int userId); 
+
+           Task<List<SubTask>> GetSubtaskss(int taskId);
+
+           Task<SubTask> GetSubtaskByIdAsync(int subtaskId);
+
+
     }
 }

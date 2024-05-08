@@ -7,7 +7,8 @@ using TrackAPI.Interfaces;
 using TrackAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using TrackAPI.DTO;
-using static TrackAPI.Models.TaskSubmission;
+using static TrackAPI.Models.TaskSubmissions;
+using Microsoft.AspNetCore.Hosting;
 
 
 namespace TrackAPI.Repository
@@ -15,10 +16,38 @@ namespace TrackAPI.Repository
     public class AddTaskRepo : ITask
     {
         private readonly TrackDbContext _context;
+        
 
-        public AddTaskRepo(TrackDbContext context)
+
+        public AddTaskRepo(TrackDbContext context )
         {
             _context = context;
+            
+        }
+         
+
+          public async Task<bool> DeleteTask(int taskId)
+        {
+            var taskToDelete = await _context.Tasks.FindAsync(taskId);
+
+            if (taskToDelete == null)
+                return false;
+
+            _context.Tasks.Remove(taskToDelete);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+         public async Task<bool> DeleteSubTaskAsync(int subTaskId)
+        {
+            var subTask = await _context.SubTask.FindAsync(subTaskId);
+            if (subTask == null)
+                return false;
+
+            _context.SubTask.Remove(subTask);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
          public async Task<int> AssignTaskToBatch(int batchId, AddTask task)
@@ -44,7 +73,7 @@ var Mentorbatch= _context.Batches.FirstOrDefault(m=>m.BatchId== batchId);
                 Description = task.Description,
                 Priority = task.Priority,
                 DeadLine = task.DeadLine,
-                Status = (TrackAPI.Models.TaskSubmission.status)task.Status,
+                Status = (TrackAPI.Models.status)task.Status,
                 AssignedBy = Mentorbatch.MentorId,
                 AssignedTo = batch.Employees.Select(e => e.UserId).ToList(),
                 // ... (Other properties)
@@ -60,33 +89,7 @@ var Mentorbatch= _context.Batches.FirstOrDefault(m=>m.BatchId== batchId);
 
         public async Task<string> AddNewSubtask(AddSubTask subtask)
         {
-           /* var existingTask = await _context.Tasks.FindAsync(subtask.TaskId);
-            if (existingTask == null)
-                return "Task not found";
-
-            var newSubtask = new SubTask
-            {
-                Title = subtask.Title,
-                Description = subtask.Description,
-                TaskId = subtask.TaskId,
-                CreationDate = DateTime.Now,
-            FileName = subtask.FileUploadTaskFileUpload.FileName // Assuming FileName is provided in DTO
-                        };
-
-                        // Handle file upload logic
-                        if (subtask.FileUploadTaskFileUpload != null && subtask.FileUploadTaskFileUpload.Length > 0)
-                        {
-                            using (var ms = new MemoryStream())
-                            {
-                                subtask.FileUploadTaskFileUpload.CopyTo(ms);
-                                newSubtask.FileUploadTaskPdf = ms.ToArray();
-                            }
-                        }
-
-            _context.SubTask.Add(newSubtask);
-            await _context.SaveChangesAsync();
-
-            return "Subtask created successfully";*/
+           
             try
             {
                 var existingTask = await _context.Tasks.FindAsync(subtask.TaskId);
@@ -131,16 +134,16 @@ var Mentorbatch= _context.Batches.FirstOrDefault(m=>m.BatchId== batchId);
             return await _context.Tasks.Where(t => t.BatchId == batchId).ToListAsync();
         }
 
-        /*public async Task<List<SubTask>> GetAllSubtasks(int taskId)
-        {
-            return await _context.SubTask.Where(s => s.TaskId == taskId).ToListAsync();
-        }*/
+        
 
         public async Task<List<SubTask>> GetAllSubtasks(int taskId)
         {
             // Retrieve all subtasks for a task
             return await _context.SubTask.Where(s => s.TaskId == taskId).ToListAsync();
+
         }
+           
+        
 
          public async Task<List<UserTask>> SearchTasksByTaskName(string taskName)
         {
@@ -153,6 +156,53 @@ var Mentorbatch= _context.Batches.FirstOrDefault(m=>m.BatchId== batchId);
             return await _context.Tasks
                 .Where(task => task.AssignedTo.Contains(userId))
                 .ToListAsync();
+        }
+
+        public async Task<byte[]> DownloadSubtaskFile(int subtaskId)
+        {
+            var subtask = await _context.SubTask.FindAsync(subtaskId);
+            return subtask.FileUploadTaskPdf;
+        }
+
+         public async Task<IEnumerable<UserTask>> GetTasksWithSubtasksByUserIdAsync(int userId)
+    {
+        return await _context.Tasks
+            .Include(task => task.SubTasks)
+            .Where(task => task.AssignedTo.Contains(userId))
+            .ToListAsync();
+    }
+
+    
+     public async Task<List<SubTask>> GetSubtaskss(int taskId)
+{
+    // Retrieve specific properties of subtasks for a task
+    return await _context.SubTask
+        .Where(s => s.TaskId == taskId)
+        .Select(s => new SubTask
+        {
+            SubTaskId = s.SubTaskId,
+            Title = s.Title,
+            Description = s.Description,
+            TaskId = s.TaskId,
+            CreationDate = s.CreationDate
+        })
+        .ToListAsync();
+}
+
+    
+        public async Task<SubTask> GetSubtaskByIdAsync(int subtaskId)
+        {
+            var subtask = await _context.SubTask.FindAsync(subtaskId);
+
+            if (subtask == null)
+                return null;
+
+            return new SubTask
+            {
+                SubTaskId = subtask.SubTaskId,
+                Title = subtask.Title,
+                Description = subtask.Description
+            };
         }
 
     }}

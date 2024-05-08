@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TrackAPI.Models;
-using static TrackAPI.Models.TaskSubmission;
+using static TrackAPI.Models.TaskSubmissions;
 
 namespace TrackAPI.Data
 {
@@ -23,15 +23,9 @@ namespace TrackAPI.Data
     public DbSet<DailyUpdate> DailyUpdates { get; set; }
 
     //changed
-    public DbSet<TaskSubmissions> TaskSubmissions{get;set;}
+    public DbSet<TaskSubmissions> TaskSubmissions {get;set;}
 
      public DbSet<Rating>Ratings {get;set;}
-
-
-
-
-
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -67,18 +61,8 @@ namespace TrackAPI.Data
         .HasForeignKey(t => t.AssignedBy)
         .OnDelete(DeleteBehavior.Restrict); // Specify the OnDelete behavior
 
-    /*modelBuilder.Entity<UserTask>()
-        .HasOne(t => t.AssignedToUser)
-        .WithMany()
-        .HasForeignKey(t => t.AssignedTo)
-        .OnDelete(DeleteBehavior.Restrict); // Specify the OnDelete behavior
+   
 
-    modelBuilder.Entity<UserTask>()
-        .HasOne(t => t.Batches)
-        .WithMany(b => b.UserTask)
-        .HasForeignKey(t => t.BatchId)
-        .OnDelete(DeleteBehavior.Restrict); // Specify the OnDelete behavior
-*/
     // Define relationship between Task and SubTask
     modelBuilder.Entity<SubTask>()
         .HasOne(st => st.UserTask)
@@ -86,28 +70,7 @@ namespace TrackAPI.Data
         .HasForeignKey(st => st.TaskId)
         .OnDelete(DeleteBehavior.Cascade); // Specify the OnDelete behavior if needed
 
-    // Define relationship between Rating and User for RatedBy
-   /* modelBuilder.Entity<Rating>()
-        .HasOne(r => r.RatedByUser)
-        .WithMany()
-        .HasForeignKey(r => r.RatedBy)
-        .OnDelete(DeleteBehavior.Restrict); // Specify the OnDelete behavior if needed
-
-    // Define relationship between Rating and User for RatedTo
-    modelBuilder.Entity<Rating>()
-        .HasOne(r => r.RatedToUser)
-        .WithMany()
-        .HasForeignKey(r => r.RatedTo)
-        .OnDelete(DeleteBehavior.Restrict); // Specify the OnDelete behavior if needed
-
-    // Define relationship between Rating and SubTask
-    modelBuilder.Entity<Rating>()
-        .HasOne(r => r.SubTask)
-        .WithMany()
-        .HasForeignKey(r => r.SubTaskId)
-        .OnDelete(DeleteBehavior.Cascade); // Specify the OnDelete behavior if needed
-// Define relationship between Feedback and Task
-  */  modelBuilder.Entity<FeedBack>()
+      modelBuilder.Entity<FeedBack>()
         .HasOne(f => f.UserTask) // Specify the navigation property for Task in Feedback
         .WithOne(t => t.FeedBack) // Specify the navigation property for Feedback in Task
         .HasForeignKey<FeedBack>(f => f.TaskId) // Specify the foreign key property in Feedback
@@ -161,17 +124,7 @@ modelBuilder.Entity<Rating>()
     .WithMany(f => f.Ratings)
     .HasForeignKey(r => r.FeedbackId)
     .OnDelete(DeleteBehavior.Restrict);
-    base.OnModelCreating(modelBuilder);
-
-
-
-
-
-    
-
-
-
-        
+    base.OnModelCreating(modelBuilder);   
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -9,6 +9,8 @@ namespace TrackAPI.Models
         public class SubTask
 {
     public int SubTaskId { get; set; }
+
+    //public int UserId { get; set; }//Fk to User
     public string Title { get; set; }
     public string Description { get; set; }
 

@@ -106,7 +106,8 @@ builder.Services.AddScoped<TaskSubServices,TaskSubServices>();
 builder.Services.AddScoped<IRating,RatingRepo>();
 builder.Services.AddScoped<RatingServices,RatingServices>();
 
-
+builder.Services.AddScoped<IDailyUpdate,DailyUpdateRepo>();
+builder.Services.AddScoped<DailyUpdateService,DailyUpdateService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

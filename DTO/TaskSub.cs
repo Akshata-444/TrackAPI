@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static TrackAPI.Models.TaskSubmission;
+using static TrackAPI.Models.TaskSubmissions;
 
 namespace TrackAPI.DTO
 {
@@ -11,7 +11,7 @@ namespace TrackAPI.DTO
         public int UserId{get;set;}//Fk to user table
 
         public int subtaskid{get;set;}
-        public status status{get;set;}=status.Pending;
+       // public status status{get;set;}=status.Pending;
         //public string? SubmittedFileName{get;set;}
         public IFormFile? FileUpload{get;set;}//Will always be null
 

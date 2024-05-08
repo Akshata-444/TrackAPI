@@ -22,7 +22,29 @@ namespace TrackAPI.Controllers
             _taskServices = taskServices;
         }
 
-       
+        [HttpDelete("subtasks/{subtaskId}")] // Specify unique route template for deleting subtasks
+    public async Task<IActionResult> DeleteSubTask(int subTaskId)
+    {
+        var result = await _taskServices.DeleteSubTaskAsync(subTaskId);
+       if (!result)
+        return NotFound(); // Return 404 if the task was not found
+
+    //return Ok("Task deleted successfully."); // Return a message confirming deletion
+    return Ok(new {});
+}
+
+     [HttpDelete("{userTaskID}")]
+public async Task<IActionResult> DeleteTask(int userTaskID)
+{
+    var result = await _taskServices.DeleteTask(userTaskID);
+    if (!result)
+        return NotFound(); // Return 404 if the task was not found
+
+    //return Ok("Task deleted successfully."); // Return a message confirming deletion
+    return Ok(new {});
+}
+
+
  [HttpPost("batches/{batchId}/tasks")]
 public async Task<IActionResult> AssignTaskToBatch(int batchId, [FromBody] AddTask taskDto)
 {
@@ -118,5 +140,63 @@ public async Task<IActionResult> AssignTaskToBatch(int batchId, [FromBody] AddTa
             }
             return tasks;
         }
+
+        [HttpGet("subtasks/{subtaskId}/download")]
+        public async Task<IActionResult> DownloadSubtaskFile(int subtaskId)
+        {
+            try
+            {
+                byte[] fileData = await _taskServices.DownloadSubtaskFile(subtaskId);
+                if (fileData == null)
+                {
+                    return NotFound("File not found");
+                }
+
+                // You can adjust the content type and file name as per your file type and naming convention
+                return File(fileData, "application/octet-stream", "subtask_file.pdf");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+          [HttpGet("{userId}/with-subtasks")]
+    public async Task<ActionResult<IEnumerable<UserTask>>> GetTasksWithSubtasksByUserIdAsync(int userId)
+    {
+        var tasks = await _taskServices.GetTasksWithSubtasksByUserIdAsync(userId);
+        if (tasks == null)
+        {
+            return NotFound();
+        }
+        return Ok(tasks);
+    }
+
+     [HttpGet("tasks/{taskId}/subtask")]
+        public async Task<IActionResult> GetSubtaskss(int taskId)
+        {
+            try
+            {
+                List<SubTask> subtasks = await _taskServices.GetSubtaskss(taskId);
+                return Ok(subtasks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+
+         [HttpGet("Sub/{subtaskId}")]
+        public async Task<ActionResult<SubTask>> GetSubtaskById(int subtaskId)
+        {
+            var subtask = await _taskServices.GetSubtaskByIdAsync(subtaskId);
+
+            if (subtask == null)
+                return NotFound();
+
+            return Ok(subtask);
+        }
+
     }
 }

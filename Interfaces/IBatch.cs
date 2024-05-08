@@ -13,12 +13,12 @@ namespace TrackAPI.Interfaces
 
         Task<IEnumerable<Batch>> GetAllBatches();
 
-        Task<string> DeleteBatch(int batchId);
+       Task<bool> DeleteBatchAsync(int batchId);
 
         //Task<byte[]> GetExcelDataForBatch(int batchId);
 
 Task<string> GetExcelDataForBatch(int batchId);
 
-
+ Task<bool> UpdateBatchAsync(int batchId, Batch updatedBatch);
     }
 }

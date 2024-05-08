@@ -13,7 +13,7 @@ namespace TrackAPI.DTO
     public int RatedTo { get; set; }//Fk to user id(Employee)
     public int TaskSubmissionId { get; set; }//Fk to submission table
     public int RatingValue { get; set; }
-    public Comments Comments { get; set; }
+    public string? Comments { get; set; }
 
     }
 }

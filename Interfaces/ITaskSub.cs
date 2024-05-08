@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using TrackAPI.DTO;
 using TrackAPI.Models;
-using static TrackAPI.Models.TaskSubmission;
+using static TrackAPI.Models.TaskSubmissions;
 
 namespace TrackAPI.Interfaces
 {
@@ -12,7 +13,19 @@ namespace TrackAPI.Interfaces
     {
          Task<TaskSubmissions> SubmitTask(TaskSub taskSubmission);
 
-         Task<List<byte[]>> GetSubmissionsBySubtaskId(int subtaskId);
+         
+         Task<List<TaskSubmissions>> GetSubmissionsBySubtaskIdAsync(int subtaskId);
+          
+          
+
+         //Task<List<int>> GetUsersBySubtaskId(int subtaskId);
+
+        Task<List<(string, byte[])>> GetSubmissionsBySubtaskIdAndUserId(int subtaskId, int TaskSubmissionsId);
+
+       
+       
+
+        
 
          
     }

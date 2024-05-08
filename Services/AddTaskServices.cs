@@ -17,7 +17,15 @@ namespace TrackAPI.Services
             _taskRepository = taskRepository;
         }
 
-      
+         public Task<bool> DeleteSubTaskAsync(int subTaskId)
+        {
+            return _taskRepository.DeleteSubTaskAsync(subTaskId);
+        }
+
+         public async Task<bool> DeleteTask(int taskId)
+        {
+            return await _taskRepository.DeleteTask(taskId);
+        }
         public async Task<int> AssignTaskToBatch(int batchId, AddTask task)
         {
             return await _taskRepository.AssignTaskToBatch(batchId, task);
@@ -53,6 +61,30 @@ namespace TrackAPI.Services
             var tasks = await _taskRepository.GetTasksByUserIdAsync(userId);
             return tasks;
         }
+
+          public async Task<byte[]> DownloadSubtaskFile(int subtaskId)
+        {
+            return await _taskRepository.DownloadSubtaskFile(subtaskId);
+        }
+
+
+        public async Task<IEnumerable<UserTask>> GetTasksWithSubtasksByUserIdAsync(int userId)
+    {
+        return await _taskRepository.GetTasksWithSubtasksByUserIdAsync(userId);
+    }
+
+          public async Task<List<SubTask>> GetSubtaskss(int taskId)
+        {
+            return await _taskRepository.GetSubtaskss(taskId);
+        }
+
+
+         public async Task<SubTask> GetSubtaskByIdAsync(int subtaskId)
+        {
+            return await _taskRepository.GetSubtaskByIdAsync(subtaskId);
+        }
+
+        
     }
 
     }

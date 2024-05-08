@@ -66,23 +66,19 @@ namespace TrackAPI.Services
             return await Batch.GetAllBatches();
         }
 
-         public async Task<string> DeleteBatch(int batchId)
+         public async Task<bool> DeleteBatchAsync(int batchId)
         {
-            try
-            {
-                return await Batch.DeleteBatch(batchId);
-            }
-            catch (Exception ex)
-            {
-                return $"Error occurred in service: {ex.Message}.";
-            }
+            return await Batch.DeleteBatchAsync(batchId);
         }
 
        public async Task<string> GetExcelDataForBatch(int batchId)
 {
     return await Batch.GetExcelDataForBatch(batchId);
 }
-
+  public async Task<bool> UpdateBatchAsync(int batchId, Batch updatedBatch)
+        {
+            return await Batch.UpdateBatchAsync(batchId, updatedBatch);
+        }
 
     }
 }

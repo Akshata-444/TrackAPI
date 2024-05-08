@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 
 namespace TrackAPI.Models
 {
-    public class TaskSubmission
-    {
-        public enum status {
+   public enum status {
 
-        Complted,
+        Completed,
         Pending,
         Failed_to_submit_within_deadline
     }
+        
     public class TaskSubmissions
     {
         public int TaskSubmissionsId{get;set;}
@@ -27,4 +26,4 @@ public string? submittedFileName{get;set;}
         
 
     }
-}}
+}

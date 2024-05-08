@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackAPI.Data;
 
@@ -11,9 +12,11 @@ using TrackAPI.Data;
 namespace TrackAPI.Migrations
 {
     [DbContext(typeof(TrackDbContext))]
-    partial class TrackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240419060339_mig")]
+    partial class mig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,6 +109,9 @@ namespace TrackAPI.Migrations
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("Uploadfile")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -124,8 +130,8 @@ namespace TrackAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedbackId"));
 
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Comments")
+                        .HasColumnType("int");
 
                     b.Property<int>("TaskId")
                         .HasColumnType("int");
@@ -154,10 +160,10 @@ namespace TrackAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RatingId"));
 
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Comments")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("FeedbackId")
+                    b.Property<int>("FeedbackId")
                         .HasColumnType("int");
 
                     b.Property<int>("RatedBy")
@@ -444,7 +450,8 @@ namespace TrackAPI.Migrations
                     b.HasOne("TrackAPI.Models.FeedBack", "FeedBack")
                         .WithMany("Ratings")
                         .HasForeignKey("FeedbackId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("TrackAPI.Models.User", "RatedByUser")
                         .WithMany()

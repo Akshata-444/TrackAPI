@@ -2,38 +2,59 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TrackAPI.Data;
 using TrackAPI.DTO;
 using TrackAPI.Interfaces;
 using TrackAPI.Models;
 
+
 namespace TrackAPI.Repository
 {
     public class RatingRepo : IRating
     {
-        private readonly TrackDbContext _context;
+       
+     private readonly TrackDbContext _context;
 
         public RatingRepo(TrackDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Rating> AddRating(AddRating ratingDto)
+        public async Task<Rating> AddRatingAsync(AddRating rating)
         {
-            var rating = new Rating
+            var newRating = new Rating
             {
-                RatedBy = ratingDto.RatedBy,
-                RatedTo = ratingDto.RatedTo,
-                TaskSubmissionId = ratingDto.TaskSubmissionId,
-                RatingValue = ratingDto.RatingValue,
-                Comments = ratingDto.Comments
+                RatedBy = rating.RatedBy,
+                RatedTo = rating.RatedTo,
+                TaskSubmissionId = rating.TaskSubmissionId,
+                RatingValue = rating.RatingValue,
+                Comments = rating.Comments
             };
 
-            await _context.Ratings.AddAsync(rating);
+            _context.Ratings.Add(newRating);
             await _context.SaveChangesAsync();
 
-            return rating;
+            return newRating;
         }
+
+
+         public async Task<IEnumerable<Rating>> GetRatingsByUserIdAsync(int userId)
+        {
+            return await _context.Ratings
+                .Where(r => r.RatedTo == userId)
+                .ToListAsync();
+        }
+
+        public async Task<int?> GetSubtaskIdBySubmissionIdAsync(int submissionId)
+        {
+            return await _context.Ratings
+                .Where(r => r.TaskSubmissionId == submissionId)
+                .Select(r => r.TaskSubmissions.subtaskid)
+                .FirstOrDefaultAsync();
+        }
+
+        
 
     }
 }
